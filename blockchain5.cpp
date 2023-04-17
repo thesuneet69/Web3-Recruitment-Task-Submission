@@ -5,7 +5,7 @@
 using namespace std;
 
 struct Speed{
-    int sx; int sy; int sz;
+    double sx; double sy; double sz;
 };
 
 typedef struct Speed Sp;
@@ -15,32 +15,33 @@ struct Car{
     string model;
     int year;
     Sp speed;
-    int x;
-    int y;
-    int z;
+    double x;
+    double y;
+    double z;
 };
+double timee;
 
-void accelerate(Car* car, int ix, int iy, int iz) {
+void accelerate(Car* car, double ix, double iy, double iz) {
     car->speed.sx += ix;
     car->speed.sy += iy;
     car->speed.sz += iz;
 }
 
-void brake(Car* car, int dx, int dy, int dz) {
+void brake(Car* car, double dx, double dy, double dz) {
     car->speed.sx -= dx;
     car->speed.sy -= dy;
     car->speed.sz -= dz;
 }
 
 void move(Car* car) {
-    car->x += car->speed.sx;
-    car->y += car->speed.sy;
-    car->z += car->speed.sz;
+    car->x += (car->speed.sx)*timee;
+    car->y += (car->speed.sy)*timee;
+    car->z += (car->speed.sz)*timee;
 }
 
 bool detect_collision(Car* car1, Car* car2) {
     double distance = sqrt(pow((car1->x - car2->x), 2) + pow((car1->y - car2->y), 2) + pow((car1->z - car2->z), 2));
-    if (distance == 0) { // assuming collision distance of 0 units
+    if (distance < 0.00001) { // assuming collision distance of 0.00001 units
         return true;
     } else {
         return false;
@@ -48,21 +49,20 @@ bool detect_collision(Car* car1, Car* car2) {
 }
 
 double time_to_collision(Car* car1, Car* car2) {
-    double speedcar1 = sqrt(pow((car1->speed.sx), 2) + pow((car1->speed.sy), 2) + pow((car1->speed.sz), 2));
-    double speedcar2 = sqrt(pow((car2->speed.sx), 2) + pow((car2->speed.sy), 2) + pow((car2->speed.sz), 2));
-    double relative_speed = fabs(speedcar1 - speedcar2);
+    double rel_speed = sqrt(pow((car1->speed.sx - car2->speed.sx),2) + pow((car1->speed.sy - car2->speed.sy),2) + pow((car1->speed.sz - car2->speed.sz),2));
     double distance = sqrt(pow((car1->x - car2->x), 2) + pow((car1->y - car2->y), 2) + pow((car1->z - car2->z), 2));
-    if (relative_speed == 0) {
+    if (rel_speed == 0) {
         return INFINITY; // cars are moving at the same speed
     } else {
-        double time = distance / relative_speed;
+        double time = distance / rel_speed;
+        timee = time; 
         return time;
     }
 }
 
 int main() {
-    int spx1, spy1, spz1, spx2, spy2, spz2, x1, y1, z1, x2, y2, z2; 
-    int ix, iy, iz, dx, dy, dz;
+    double spx1, spy1, spz1, spx2, spy2, spz2, x1, y1, z1, x2, y2, z2; 
+    double ix, iy, iz, dx, dy, dz;
     
     cout << "Enter speed with co-ordinates of car1: ";
     cin >> spx1 >> spy1 >> spz1;
@@ -93,34 +93,35 @@ int main() {
         printf("Press A if you want to accelerate, B if you want to brake.");
         scanf(" %c", &q);
         if (q == 'A') {
-            int ix, iy, iz;
+            double ix, iy, iz;
             printf("Enter acceleration with 3 components: ");
-            scanf("%d %d %d", &ix, &iy, &iz);
+            scanf("%lf %lf %lf", &ix, &iy, &iz);
             accelerate(&car1, ix, iy, iz);
         } else {
-            int dx, dy, dz;
+            double dx, dy, dz;
             printf("Enter braking with 3 components: ");
-            scanf("%d %d %d", &dx, &dy, &dz);
+            scanf("%lf %lf %lf", &dx, &dy, &dz);
             brake(&car1, dx, dy, dz);
         }
     } else {
         printf("Press A if you want to accelerate, B if you want to brake.");
         scanf(" %c", &q);
         if (q == 'A') {
-            int ix, iy, iz;
+            double ix, iy, iz;
             printf("Enter acceleration with 3 components: ");
-            scanf("%d %d %d", &ix, &iy, &iz);
+            scanf("%lf %lf %lf", &ix, &iy, &iz);
             accelerate(&car2, ix, iy, iz);
         } else {
-            int dx, dy, dz;
+            double dx, dy, dz;
             printf("Enter braking with 3 components: ");
-            scanf("%d %d %d", &dx, &dy, &dz);
+            scanf("%lf %lf %lf", &dx, &dy, &dz);
             brake(&car2, dx, dy, dz);
         }
     }
     double time_to_collision1 = time_to_collision(&car1, &car2);
     move(&car1);
     move(&car2);
+
 
     if (detect_collision(&car1, &car2)) {
         printf("Cars will collide.\n");
