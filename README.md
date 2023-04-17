@@ -8,13 +8,13 @@ Now I calculated the time taken for them to collide, and then invoked the move f
 
 Try testing the program with these values(or any other values obviously):
 
-Speed of car1 : 1 2 3 
+Speed of car1: 1 2 3 
 
-co-ordinates of car1 : 0 0 0
+co-ordinates of car1: 0 0 0
 
-Speed of car2 : 2 4 6
+Speed of car2: 2 4 6
 
-co-ordinates of car1 : -1 -2 -3
+co-ordinates of car2: -1 -2 -3
 
 
 They should collide after 1 second. 
