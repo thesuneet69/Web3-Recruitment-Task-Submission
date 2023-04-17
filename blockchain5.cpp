@@ -40,7 +40,7 @@ void move(Car* car) {
 
 bool detect_collision(Car* car1, Car* car2) {
     double distance = sqrt(pow((car1->x - car2->x), 2) + pow((car1->y - car2->y), 2) + pow((car1->z - car2->z), 2));
-    if (distance <= 0) { // assuming collision distance of 0 units
+    if (distance == 0) { // assuming collision distance of 0 units
         return true;
     } else {
         return false;
@@ -48,8 +48,8 @@ bool detect_collision(Car* car1, Car* car2) {
 }
 
 double time_to_collision(Car* car1, Car* car2) {
-    double speedcar1 = pow(pow((car1->speed.sx), 2) + pow((car1->speed.sy), 2) + pow((car1->speed.sz), 2), (1.0/3));
-    double speedcar2 = pow(pow((car2->speed.sx), 2) + pow((car2->speed.sy), 2) + pow((car2->speed.sz), 2), (1.0/3));
+    double speedcar1 = sqrt(pow((car1->speed.sx), 2) + pow((car1->speed.sy), 2) + pow((car1->speed.sz), 2));
+    double speedcar2 = sqrt(pow((car2->speed.sx), 2) + pow((car2->speed.sy), 2) + pow((car2->speed.sz), 2));
     double relative_speed = fabs(speedcar1 - speedcar2);
     double distance = sqrt(pow((car1->x - car2->x), 2) + pow((car1->y - car2->y), 2) + pow((car1->z - car2->z), 2));
     if (relative_speed == 0) {
@@ -79,7 +79,7 @@ int main() {
     Sp sp1; 
     sp1.sx = spx1; sp1.sy = spy1; sp1.sz = spz1; 
     Sp sp2; 
-    sp2.sx = spx2; sp2.sy = spy2; sp2.sz;
+    sp2.sx = spx2; sp2.sy = spy2; sp2.sz = spz2;
        
     Car car1 = {"Hyundai","Verna" ,2020, sp1, x1, y1, z1};
     Car car2 = {"Kia", "Seltos", 2021, sp2, x2, y2, z2};
@@ -123,10 +123,10 @@ int main() {
     move(&car2);
 
     if (detect_collision(&car1, &car2)) {
+        printf("Cars will collide.\n");
+    } else {
         printf("Cars will not collide.\n");
         return 0;
-    } else {
-        printf("Cars will collide.\n");
     }
     printf("Time to collision: %lf", time_to_collision1);
 
